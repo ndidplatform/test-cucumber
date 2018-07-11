@@ -1,0 +1,27 @@
+{
+  "name": "ndid-e2e-test-cucumber",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "docker-build": "docker-compose -f docker/docker-compose.build.yml build",
+    "docker-authen-up": "docker-compose -f docker/docker-compose-authen.yml up --abort-on-container-exit",
+    "docker-dataRequest-up": "docker-compose -f docker/docker-compose-dataRequest.yml up --abort-on-container-exit",
+    "docker-authen-down": "docker-compose -f docker/docker-compose-authen.yml down",
+    "docker-dataRequest-down": "docker-compose -f docker/docker-compose-dataRequest.yml down"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "cucumber": "^4.2.1",
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
+    "node-fetch": "^2.1.2",
+    "redis": "^2.8.0",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2",
+    "shelljs": "^0.8.2",
+    "uuid": "^3.2.1",
+    "cucumber-junit": "^1.7.1"
+  },
+  "author": "",
+  "license": "ISC"
+}

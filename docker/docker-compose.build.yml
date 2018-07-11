@@ -1,0 +1,7 @@
+version: "3"
+services: 
+  ndid-test:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    image: ndidplatform/ndid-test:latest

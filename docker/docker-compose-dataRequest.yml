@@ -1,0 +1,38 @@
+version: "3"
+services: 
+  redis:
+    image: redis
+    networks: 
+      - ndidplatform
+  ndid-test-datarequest:
+    image: ndidplatform/ndid-test:latest
+    volumes:
+      - ../features:/ndid-test/features
+      - ../mockclient:/ndid-test/mockclient
+      - ../scripts:/ndid-test/scripts 
+      - ../test-result:/ndid-test/test-result
+    environment:
+      - IDP_API_IP=api-idp-1
+      - RP_API_IP=api-rp
+      - AS_API_IP=api-as
+      - IDP_API_PORT=${IDP_PORT:-8080}
+      - RP_API_PORT=${RP_PORT:-8080}
+      - AS_API_PORT=${AS_PORT:-8080}
+      - MOCK_SERVER_RP_IP=ndid-test-datarequest
+      - MOCK_SERVER_IDP_IP=ndid-test-datarequest
+      - MOCK_SERVER_AS_IP=ndid-test-datarequest
+      - REDIS_IP=redis
+      - REDIS_PORT=6379
+      - START=dataRequest
+    ports:
+      - "1070:${MOCK_SERVER_RP_PORT:-1070}"
+      - "1080:${MOCK_SERVER_IDP_PORT:-1080}"
+      - "1090:${MOCK_SERVER_AS_PORT:-1090}"
+    depends_on:
+      - redis
+    networks:
+      - ndidplatform
+
+networks:
+  ndidplatform:
+
