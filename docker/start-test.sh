@@ -23,11 +23,22 @@ wait_for_api_to_be_ready(){
     done
 }
 
+wait_until_api_to_be_ready() {
+  until wait_for_api_to_be_ready ${IDP_API_IP} ${IDP_API_PORT}; do sleep 1; done;
+  until wait_for_api_to_be_ready ${AS_API_IP} ${AS_API_PORT}; do sleep 1; done;
+  until wait_for_api_to_be_ready ${RP_API_IP} ${RP_API_PORT}; do sleep 1; done;
+}
+
+
 case ${START} in
 authen)
+    wait_until_api_to_be_ready
+    sleep 1
     ./scripts/test-authen.sh
     ;;
 dataRequest)
+    wait_until_api_to_be_ready
+    sleep 1
     ./scripts/test-dataRequest.sh
     ;;
 esac
