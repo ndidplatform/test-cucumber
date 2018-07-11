@@ -7,12 +7,7 @@ services:
   ndid-test-authen:
     image: ndidplatform/ndid-test:latest
     volumes:
-      - ../features:/ndid-test/features
-      - ../mockclient:/ndid-test/mockclient
-      - ../scripts:/ndid-test/scripts 
       - ../test-result:/ndid-test/test-result
-      - ../persistent_db:/ndid-test/persistent_db/
-
     environment:
       - IDP_API_IP=api-idp-1
       - RP_API_IP=api-rp
