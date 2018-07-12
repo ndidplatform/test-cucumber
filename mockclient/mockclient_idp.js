@@ -37,7 +37,7 @@ app.post('/idp/identity', async (req, res) => {
     );
   } else if (request.type === 'create_identity_result') {
     for (;;) {
-      let fileName = config.keyPath + 'ReferenceId_' + request.reference_id; 
+      let fileName = config.keyPath + 'ReferenceId_' + request.reference_id;
       if (fs.existsSync(fileName)) {
         try {
           let sid = fs.readFileSync(fileName, 'utf8'); // Get sid that associated with reference_id in callback for persistent secret
@@ -66,24 +66,38 @@ app.post('/idp/identity', async (req, res) => {
 
 app.post('/idp/request', (req, res) => {
   const request = req.body;
-  pub.publish(
-    'IDP_receive_request_from_IDP_platform',
-    JSON.stringify(request)
-  );
+  pub.publish('IDP_receive_request_from_IDP_platform', JSON.stringify(request));
   res.status(200).end();
 });
 
 app.post('/idp/accessor/sign', async (req, res) => {
   let request = req.body;
-  let signature = await zkProof.accessorSign(request.sid, request.sid_hash);
-  res.status(200).send({
-    signature: signature,
-  });
+  let fileName = config.keyPath + request.sid;
+  try {
+    for (;;) {
+      if (fs.existsSync(fileName)) {
+        let accessor_private_key = fs.readFileSync(fileName, 'utf8');
+        let signature = await zkProof.signMessage(
+          request.sid,
+          accessor_private_key
+        );
+        res.status(200).send({
+          signature: signature,
+        });
+      }
+      await new Promise((resolve, reject) => setTimeout(resolve, 2500));
+    }
+  } catch (error) {
+    res.status(500).end();
+  }
 });
 
 app.post('/idp/response/:reference_id', (req, res) => {
   const request = req.body;
-  pub.publish('IDP_receive_response_result_from_IDP_platform', JSON.stringify(request));
+  pub.publish(
+    'IDP_receive_response_result_from_IDP_platform',
+    JSON.stringify(request)
+  );
   res.status(204).end();
 });
 

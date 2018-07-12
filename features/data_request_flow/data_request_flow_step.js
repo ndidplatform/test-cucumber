@@ -268,6 +268,7 @@ Given('IDP client should receive request from IDP platform', function(callback) 
 Given('IDP client making a request for create response', function(data,callback) {
   if (RequestFromIdpPlatform) {
     let sid =RequestFromIdpPlatform.namespace +':'+RequestFromIdpPlatform.identifier;
+    let accessor_private_key = fs.readFileSync(config.keyPath + sid,'utf8');
     let dataRequest = JSON.parse(data);
     this.requestBody = {
       ...dataRequest,
@@ -279,7 +280,7 @@ Given('IDP client making a request for create response', function(data,callback)
       secret: fs.readFileSync(config.keyPath + 'secret_' + sid, 'utf8'),
       signature: zkProof.signMessage(
         RequestFromIdpPlatform.request_message,
-        config.keyPath + sid
+        accessor_private_key
       ),
       accessor_id: fs.readFileSync(config.keyPath + 'accessor_id/' + sid, 'utf8'),
       callback_url:
